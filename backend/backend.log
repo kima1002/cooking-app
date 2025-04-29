@@ -1,0 +1,10 @@
+
+> cooking-app-backend@1.0.0 start:dev
+> nodemon --watch src/**/*.ts --exec ts-node src/main.ts
+
+[33m[nodemon] 3.1.9[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): src/auth/auth.controller.ts[39m
+[33m[nodemon] watching extensions: ts,json[39m
+[32m[nodemon] starting `ts-node src/auth/auth.module.ts src/auth/auth.service.ts src/recipes/recipe.schema.ts src/recipes/recipes.controller.ts src/recipes/recipes.module.ts src/recipes/recipes.service.ts src/users/user.schema.ts src/users/users.controller.ts src/users/users.module.ts src/users/users.service.ts src/main.ts`[39m
+[32m[nodemon] clean exit - waiting for changes before restart[39m
