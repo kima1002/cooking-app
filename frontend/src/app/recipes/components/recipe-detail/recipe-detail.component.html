@@ -1,0 +1,102 @@
+<div class="recipe-detail-container">
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div *ngIf="!recipe && !isLoading" class="no-recipe">
+    <mat-icon>error_outline</mat-icon>
+    <h2>Recipe not found</h2>
+    <p>The recipe you're looking for doesn't exist or has been removed.</p>
+    <button mat-raised-button color="primary" routerLink="/recipes">
+      Back to Recipes
+    </button>
+  </div>
+
+  <div *ngIf="recipe">
+    <div class="header">
+      <div class="header-left">
+        <button mat-icon-button routerLink="/recipes">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1>{{ recipe.name }}</h1>
+      </div>
+
+      <div class="header-right" *ngIf="isOwner">
+        <button mat-button color="primary" [routerLink]="['/recipes', recipe._id, 'edit']">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+        <button mat-button color="warn" (click)="deleteRecipe()">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <div class="recipe-content">
+      <div class="recipe-main">
+        <div class="recipe-image-container">
+          <div class="recipe-image" *ngIf="recipe.imageUrl">
+            <img [src]="recipe.imageUrl" [alt]="recipe.name" (error)="handleImageError($event)">
+          </div>
+          <div class="recipe-image placeholder" *ngIf="!recipe.imageUrl">
+            <mat-icon>restaurant</mat-icon>
+            <!-- SVG fallback if mat-icon fails -->
+            <img src="assets/restaurant-icon.svg" class="fallback-icon" alt="Recipe icon" />
+          </div>
+
+          <div class="recipe-author">
+            <mat-icon>person</mat-icon>
+            <span>{{ getAuthorName() }}</span>
+            <span class="recipe-owner-badge" *ngIf="isOwner">(You are the author)</span>
+          </div>
+
+          <div class="recipe-social">
+            <app-like-button [recipe]="recipe" (liked)="handleLike()"></app-like-button>
+
+            <div class="recipe-badges">
+              <div class="public-badge" *ngIf="recipe.isPublic">
+                <mat-icon>public</mat-icon>
+                <span>Public Recipe</span>
+              </div>
+              <div class="private-badge" *ngIf="!recipe.isPublic">
+                <mat-icon>lock</mat-icon>
+                <span>Private Recipe</span>
+              </div>
+              <div class="ownership-badge" *ngIf="!isOwner">
+                <mat-icon>visibility</mat-icon>
+                <span>View Only</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-card class="recipe-info">
+          <mat-card-content>
+            <h2>Ingredients</h2>
+            <mat-list class="ingredients-list">
+              <mat-list-item class="list-item" *ngFor="let ingredient of recipe.ingredients">
+                <mat-icon matListItemIcon style="margin-right: 4px">check</mat-icon>
+                <div matListItemTitle>{{ ingredient }}</div>
+              </mat-list-item>
+            </mat-list>
+
+            <h2>Instructions</h2>
+            <p class="instructions">{{ recipe.instructions }}</p>
+
+            <div class="recipe-dates">
+              <p *ngIf="recipe.createdAt">
+                <strong>Created:</strong> {{ recipe.createdAt | date:'medium' }}
+              </p>
+              <p *ngIf="recipe.updatedAt">
+                <strong>Last updated:</strong> {{ recipe.updatedAt | date:'medium' }}
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="recipe-comments">
+        <app-comments-section [recipeId]="recipe._id!"></app-comments-section>
+      </div>
+    </div>
+  </div>
+</div>

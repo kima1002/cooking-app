@@ -1,0 +1,170 @@
+<div class="search-container">
+  <mat-card class="search-card">
+    <mat-card-header>
+      <mat-card-title>
+        <div class="search-header">
+          <mat-icon>search</mat-icon>
+          <span>Advanced Recipe Search</span>
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
+        <!-- Basic search -->
+        <div class="search-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Search for recipes</mat-label>
+            <input matInput formControlName="query" placeholder="Enter recipe name or keywords">
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Ingredients search -->
+        <div class="search-section">
+          <h3 class="section-title">Ingredients</h3>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Search by ingredients</mat-label>
+            <mat-chip-grid #chipList aria-label="Ingredient selection">
+              <mat-chip *ngFor="let ingredient of ingredientsArray.controls; let i = index" 
+                        [removable]="true" (removed)="removeIngredient(i)">
+                {{ingredient.value}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="Add ingredient..." 
+                     [matChipInputFor]="chipList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addIngredient($event)">
+            </mat-chip-grid>
+            <mat-hint>Enter ingredients to find recipes that use them</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Dietary restrictions -->
+        <div class="search-section">
+          <h3 class="section-title">Dietary Restrictions</h3>
+          <div class="chip-options">
+            <mat-chip-set>
+              <mat-chip *ngFor="let option of dietaryOptions"
+                       [highlighted]="isDietaryTagSelected(option.value)"
+                       [color]="isDietaryTagSelected(option.value) ? 'primary' : undefined"
+                       (click)="onDietaryTagChange(option.value, !isDietaryTagSelected(option.value))">
+                {{option.displayName}}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Cooking time filters -->
+        <div class="search-section">
+          <h3 class="section-title">Cooking Time</h3>
+          <div class="time-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Max Prep Time (mins)</mat-label>
+              <input matInput type="number" formControlName="maxPrepTime" min="0">
+              <mat-icon matPrefix>schedule</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Max Cook Time (mins)</mat-label>
+              <input matInput type="number" formControlName="maxCookTime" min="0">
+              <mat-icon matPrefix>timer</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Max Total Time (mins)</mat-label>
+              <input matInput type="number" formControlName="maxTotalTime" min="0">
+              <mat-icon matPrefix>hourglass_full</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Meal type options -->
+        <div class="search-section">
+          <h3 class="section-title">Meal Type</h3>
+          <div class="chip-options">
+            <mat-chip-set>
+              <mat-chip *ngFor="let option of mealTypeOptions"
+                       [highlighted]="isMealTypeSelected(option.value)"
+                       [color]="isMealTypeSelected(option.value) ? 'primary' : undefined"
+                       (click)="onMealTypeChange(option.value, !isMealTypeSelected(option.value))">
+                {{option.displayName}}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Cuisine options -->
+        <div class="search-section">
+          <h3 class="section-title">Cuisine</h3>
+          <div class="chip-options">
+            <mat-chip-set>
+              <mat-chip *ngFor="let option of cuisineOptions"
+                       [highlighted]="isCuisineSelected(option.value)"
+                       [color]="isCuisineSelected(option.value) ? 'primary' : undefined"
+                       (click)="onCuisineChange(option.value, !isCuisineSelected(option.value))">
+                {{option.displayName}}
+              </mat-chip>
+            </mat-chip-set>
+          </div>
+        </div>
+
+        <!-- Difficulty level -->
+        <div class="search-section">
+          <h3 class="section-title">Difficulty Level</h3>
+          <mat-button-toggle-group formControlName="difficulty" class="difficulty-toggle">
+            <mat-button-toggle [value]="null">Any</mat-button-toggle>
+            <mat-button-toggle *ngFor="let option of difficultyOptions" [value]="option.value">
+              {{option.displayName}}
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <!-- Public/private toggle -->
+        <div class="search-section visibility-toggle">
+          <mat-slide-toggle formControlName="onlyPublic" color="primary">
+            Show only public recipes
+          </mat-slide-toggle>
+        </div>
+
+        <!-- Search actions -->
+        <div class="search-actions">
+          <button type="button" mat-button (click)="clearSearch()">Clear</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="isLoading">
+            <mat-icon>search</mat-icon>
+            Search
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Search results -->
+  <div class="search-results">
+    <h2 *ngIf="searchResults.length > 0" class="results-title">Search Results ({{searchResults.length}})</h2>
+    
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    
+    <div *ngIf="searchResults.length === 0 && !isLoading" class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <h3>No recipes match your search criteria</h3>
+      <p>Try adjusting your filters or search for different keywords</p>
+    </div>
+    
+    <div *ngIf="searchResults.length > 0" class="recipe-grid">
+      <app-recipe-card *ngFor="let recipe of searchResults" [recipe]="recipe"></app-recipe-card>
+    </div>
+  </div>
+
+  <!-- Recommendations -->
+  <div class="recommendations-section" *ngIf="recommendedRecipes.length > 0">
+    <h2 class="section-title">Recommended For You</h2>
+    <p class="section-subtitle">Based on your likes and cooking preferences</p>
+    
+    <mat-progress-bar *ngIf="isLoadingRecommended" mode="indeterminate"></mat-progress-bar>
+    
+    <div class="recipe-grid">
+      <app-recipe-card *ngFor="let recipe of recommendedRecipes" [recipe]="recipe"></app-recipe-card>
+    </div>
+  </div>
+</div>

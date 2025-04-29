@@ -1,0 +1,231 @@
+.recipe-card {
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid var(--accent-light);
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.recipe-badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  .recipe-badge {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    color: white;
+    backdrop-filter: blur(4px);
+    
+    mat-icon {
+      font-size: 14px;
+      height: 14px;
+      width: 14px;
+      margin-right: 4px;
+    }
+    
+    &.owner-badge {
+      background-color: var(--primary-dark);
+    }
+    
+    &.public-badge {
+      background-color: var(--accent-color);
+    }
+    
+    &.private-badge {
+      background-color: var(--text-light);
+    }
+  }
+}
+
+img {
+  height: 200px;
+  object-fit: cover;
+  border-radius: 4px 4px 0 0;
+}
+
+.placeholder-image {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-light);
+  
+  mat-icon {
+    font-size: 64px;
+    height: 64px;
+    width: 64px;
+    color: var(--primary-light);
+    margin-bottom: 8px;
+  }
+  
+  .fallback-icon {
+    max-width: 64px;
+    max-height: 64px;
+    opacity: 0.7;
+  }
+}
+
+mat-card-header {
+  padding: 16px 16px 0;
+  border-bottom: 1px solid var(--background-light);
+  
+  mat-card-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .recipe-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-light);
+    
+    .author, .ingredients {
+      display: flex;
+      align-items: center;
+      
+      mat-icon {
+        font-size: 14px;
+        height: 14px;
+        width: 14px;
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+mat-card-content {
+  padding: 0 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  
+  .recipe-tags {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    
+    mat-chip-list {
+      mat-chip {
+        font-size: 11px;
+        min-height: 24px;
+        padding: 0 8px;
+      }
+    }
+  }
+  
+  .recipe-details {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    
+    .detail-item {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-color);
+      
+      mat-icon {
+        font-size: 14px;
+        height: 14px;
+        width: 14px;
+        margin-right: 4px;
+        color: var(--primary-color);
+      }
+    }
+  }
+  
+  .recipe-instructions {
+    font-size: 14px;
+    color: var(--text-color);
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    margin-bottom: 16px;
+  }
+}
+
+mat-card-actions {
+  padding: 12px 8px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--background-light);
+  margin-top: auto;
+  
+  .action-button {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 13px;
+    
+    mat-icon {
+      margin-right: 4px;
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+    
+    &.view-button {
+      margin-right: 6px;
+    }
+  }
+}
+
+mat-card-footer {
+  background-color: var(--background-light);
+  
+  .recipe-stats {
+    display: flex;
+    padding: 8px 16px;
+    border-top: 1px solid var(--accent-light);
+    
+    .likes, .comments {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      margin-right: 16px;
+      color: var(--text-light);
+      
+      mat-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        margin-right: 4px;
+      }
+      
+      &.likes mat-icon {
+        color: var(--accent-color);
+      }
+    }
+  }
+}

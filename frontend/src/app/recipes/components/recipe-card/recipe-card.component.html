@@ -1,0 +1,87 @@
+<mat-card class="recipe-card">
+  <div class="recipe-badges">
+    <div class="recipe-badge owner-badge" *ngIf="isOwner">
+      <mat-icon>account_circle</mat-icon>
+      <span>Your Recipe</span>
+    </div>
+    <div class="recipe-badge public-badge" *ngIf="recipe.isPublic">
+      <mat-icon>public</mat-icon>
+      <span>Public</span>
+    </div>
+    <div class="recipe-badge private-badge" *ngIf="!recipe.isPublic">
+      <mat-icon>lock</mat-icon>
+      <span>Private</span>
+    </div>
+  </div>
+
+  <img *ngIf="recipe.imageUrl" mat-card-image [src]="recipe.imageUrl" [alt]="recipe.name" (error)="handleImageError($event)">
+  <div *ngIf="!recipe.imageUrl" class="placeholder-image">
+    <mat-icon>restaurant</mat-icon>
+    <img src="assets/restaurant-icon.svg" class="fallback-icon" alt="Recipe icon" />
+  </div>
+
+  <mat-card-header>
+    <mat-card-title>{{ recipe.name }}</mat-card-title>
+    <mat-card-subtitle>
+      <div class="recipe-meta">
+        <span class="author">
+          <mat-icon>person</mat-icon>
+          {{ getRecipeAuthor() }}
+        </span>
+        <span class="ingredients">
+          <mat-icon>list</mat-icon>
+          {{ recipe.ingredients.length }} ingredients
+        </span>
+      </div>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="recipe-tags" *ngIf="recipe.dietaryTags && recipe.dietaryTags.length > 0">
+      <mat-chip-set>
+        <mat-chip *ngFor="let tag of recipe.dietaryTags" color="accent" selected>
+          {{ tag }}
+        </mat-chip>
+      </mat-chip-set>
+    </div>
+    
+    <div class="recipe-details" *ngIf="recipe.prepTime || recipe.cookTime || recipe.difficulty">
+      <div class="detail-item" *ngIf="recipe.prepTime || recipe.cookTime">
+        <mat-icon>schedule</mat-icon>
+        <span>{{ getTotalTime() }}</span>
+      </div>
+      <div class="detail-item" *ngIf="recipe.difficulty">
+        <mat-icon>fitness_center</mat-icon>
+        <span>{{ getDifficultyLabel() }}</span>
+      </div>
+      <div class="detail-item" *ngIf="recipe.cuisine && recipe.cuisine.length > 0">
+        <mat-icon>restaurant</mat-icon>
+        <span>{{ recipe.cuisine[0] }}</span>
+      </div>
+    </div>
+    
+    <p class="recipe-instructions">{{ recipe.instructions | slice:0:100 }}{{ recipe.instructions.length > 100 ? '...' : '' }}</p>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button color="primary" [routerLink]="['/recipes', recipe._id || '']" class="action-button view-button">
+      <mat-icon>visibility</mat-icon> View
+    </button>
+    <button mat-button color="accent" [routerLink]="['/recipes', recipe._id || '', 'edit']" *ngIf="isOwner" class="action-button edit-button">
+      <mat-icon>edit</mat-icon> Edit
+    </button>
+  </mat-card-actions>
+
+  <mat-card-footer>
+    <div class="recipe-stats">
+      <div class="likes">
+        <mat-icon>favorite</mat-icon>
+        <span>{{ recipe.likesCount || 0 }}</span>
+      </div>
+      <div class="comments">
+        <mat-icon>comment</mat-icon>
+        <span>{{ recipe.comments.length || 0 }}</span>
+      </div>
+    </div>
+  </mat-card-footer>
+</mat-card>

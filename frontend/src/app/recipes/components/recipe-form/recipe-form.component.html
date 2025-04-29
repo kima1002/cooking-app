@@ -1,0 +1,187 @@
+<div class="recipe-form-container">
+  <mat-progress-bar *ngIf="isLoading || isSubmitting" mode="indeterminate"></mat-progress-bar>
+
+  <div class="header" *ngIf="!isDialog">
+    <button mat-icon-button routerLink="/recipes">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>{{ isEditMode ? 'Edit' : 'Create' }} Recipe</h1>
+  </div>
+
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()" class="recipe-form">
+    <mat-card>
+      <mat-card-header *ngIf="isDialog">
+        <mat-card-title>{{ isEditMode ? 'Edit' : 'Create' }} Recipe</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Recipe Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter recipe name" required>
+            <mat-error *ngIf="recipeForm.get('name')?.hasError('required')">
+              Recipe name is required
+            </mat-error>
+            <mat-error *ngIf="recipeForm.get('name')?.hasError('minlength')">
+              Recipe name must be at least 3 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Image URL</mat-label>
+            <input matInput formControlName="imageUrl" placeholder="https://example.com/image.jpg">
+            <mat-error *ngIf="recipeForm.get('imageUrl')?.hasError('pattern')">
+              Please enter a valid URL
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-section">
+          <div class="section-header">
+            <h2>Ingredients</h2>
+            <button type="button" mat-mini-fab color="primary" (click)="addIngredient()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div formArrayName="ingredients">
+            <div *ngFor="let ingredient of ingredients.controls; let i = index" class="ingredient-row">
+              <div [formGroupName]="i" class="ingredient-form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Ingredient {{ i + 1 }}</mat-label>
+                  <input matInput formControlName="value" placeholder="Enter ingredient" required>
+                  <mat-error *ngIf="ingredient.get('value')?.hasError('required')">
+                    Ingredient is required
+                  </mat-error>
+                  <mat-error *ngIf="ingredient.get('value')?.hasError('minlength')">
+                    Ingredient must be at least 2 characters
+                  </mat-error>
+                </mat-form-field>
+
+                <button type="button" mat-icon-button color="warn" (click)="removeIngredient(i)"
+                  [disabled]="ingredients.length <= 1">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Instructions</mat-label>
+            <textarea matInput formControlName="instructions" placeholder="Enter cooking instructions" rows="6"
+              required></textarea>
+            <mat-error *ngIf="recipeForm.get('instructions')?.hasError('required')">
+              Instructions are required
+            </mat-error>
+            <mat-error *ngIf="recipeForm.get('instructions')?.hasError('minlength')">
+              Instructions must be at least 10 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Advanced fields section -->
+        <div class="form-section">
+          <div class="section-header">
+            <h2>Recipe Details</h2>
+          </div>
+          
+          <!-- Cooking times -->
+          <div class="times-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Prep Time (minutes)</mat-label>
+              <input matInput type="number" formControlName="prepTime" min="0">
+              <mat-icon matPrefix>schedule</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Cook Time (minutes)</mat-label>
+              <input matInput type="number" formControlName="cookTime" min="0">
+              <mat-icon matPrefix>timer</mat-icon>
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline">
+              <mat-label>Difficulty</mat-label>
+              <mat-select formControlName="difficulty">
+                <mat-option [value]="1">Easy</mat-option>
+                <mat-option [value]="2">Medium</mat-option>
+                <mat-option [value]="3">Hard</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>fitness_center</mat-icon>
+            </mat-form-field>
+          </div>
+          
+          <!-- Dietary tags -->
+          <div class="form-row">
+            <h3 class="subsection-title">Dietary Tags</h3>
+            <mat-chip-grid #dietaryChipList>
+              <mat-chip *ngFor="let tag of dietaryTags" [removable]="true" (removed)="removeTag(tag)">
+                {{tag}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="Add tag..."
+                    [matChipInputFor]="dietaryChipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addDietaryTag($event)">
+            </mat-chip-grid>
+            <div class="hint-text">Add dietary tags like: vegetarian, vegan, gluten-free, low-carb</div>
+          </div>
+          
+          <!-- Meal type -->
+          <div class="form-row">
+            <h3 class="subsection-title">Meal Type</h3>
+            <mat-chip-grid #mealTypeChipList>
+              <mat-chip *ngFor="let type of mealTypes" [removable]="true" (removed)="removeMealType(type)">
+                {{type}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="Add meal type..."
+                    [matChipInputFor]="mealTypeChipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addMealType($event)">
+            </mat-chip-grid>
+            <div class="hint-text">Add meal types like: breakfast, lunch, dinner, dessert, snack</div>
+          </div>
+          
+          <!-- Cuisine -->
+          <div class="form-row">
+            <h3 class="subsection-title">Cuisine</h3>
+            <mat-chip-grid #cuisineChipList>
+              <mat-chip *ngFor="let type of cuisines" [removable]="true" (removed)="removeCuisine(type)">
+                {{type}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input placeholder="Add cuisine..."
+                    [matChipInputFor]="cuisineChipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addCuisine($event)">
+            </mat-chip-grid>
+            <div class="hint-text">Add cuisines like: italian, mexican, asian, indian, mediterranean</div>
+          </div>
+        </div>
+        
+        <div class="form-row visibility-toggle">
+          <mat-slide-toggle formControlName="isPublic" color="primary">
+            Make this recipe public
+          </mat-slide-toggle>
+          <div class="visibility-hint">
+            <mat-icon>{{ recipeForm.get('isPublic')?.value ? 'public' : 'public_off' }}</mat-icon>
+            <span>{{ recipeForm.get('isPublic')?.value ? 
+              'This recipe will be visible to everyone' : 
+              'This recipe will only be visible to you' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="recipeForm.invalid || isSubmitting">
+          {{ isEditMode ? 'Update' : 'Create' }} Recipe
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

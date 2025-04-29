@@ -1,0 +1,172 @@
+.search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search-card {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  color: var(--primary-dark);
+  
+  mat-icon {
+    margin-right: 8px;
+    color: var(--primary-color);
+  }
+}
+
+.search-form {
+  padding: 8px 0;
+}
+
+.search-row {
+  margin-bottom: 16px;
+}
+
+.search-section {
+  margin-bottom: 24px;
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--primary-dark);
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.time-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.chip-options {
+  mat-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    
+    mat-chip {
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      
+      &.mat-standard-chip.mat-primary {
+        background-color: var(--primary-light);
+      }
+    }
+  }
+}
+
+.difficulty-toggle {
+  display: flex;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  
+  .mat-button-toggle {
+    flex: 1;
+    text-align: center;
+    
+    &.mat-button-toggle-checked {
+      background-color: var(--primary-light);
+      color: white;
+    }
+  }
+}
+
+.visibility-toggle {
+  background-color: #f5f5f5;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.search-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  
+  button {
+    margin-left: 16px;
+  }
+}
+
+.search-results, .recommendations-section {
+  margin-top: 32px;
+}
+
+.results-title, .section-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+
+.section-subtitle {
+  color: var(--text-light);
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.no-results {
+  padding: 48px 0;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-top: 16px;
+  
+  mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+  
+  h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--text-color);
+  }
+  
+  p {
+    color: var(--text-light);
+    margin: 0;
+  }
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .time-fields {
+    grid-template-columns: 1fr;
+  }
+  
+  .search-actions {
+    flex-direction: column;
+    
+    button {
+      margin: 8px 0 0;
+      width: 100%;
+    }
+  }
+  
+  .recipe-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+}

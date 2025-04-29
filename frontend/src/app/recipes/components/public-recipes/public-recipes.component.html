@@ -1,0 +1,54 @@
+<div class="public-recipes-container">
+  <div class="header">
+    <h1>Public Recipes</h1>
+  </div>
+
+  <div class="loading-indicator" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading public recipes...</span>
+  </div>
+
+  <div class="no-recipes" *ngIf="!isLoading && recipes.length === 0">
+    <mat-icon>public_off</mat-icon>
+    <h2>No public recipes yet</h2>
+    <p>Be the first to share a recipe with the community!</p>
+  </div>
+
+  <div class="recipes-grid" *ngIf="!isLoading && recipes.length > 0">
+    <mat-card class="recipe-card" *ngFor="let recipe of recipes">
+      <div class="recipe-image" *ngIf="recipe.imageUrl">
+        <img [src]="recipe.imageUrl" [alt]="recipe.name">
+      </div>
+      <div class="recipe-image placeholder" *ngIf="!recipe.imageUrl">
+        <mat-icon>restaurant</mat-icon>
+      </div>
+
+      <mat-card-content>
+        <h2>{{ recipe.name }}</h2>
+        <p class="ingredients">
+          <strong>Ingredients:</strong> {{ recipe.ingredients.join(', ') }}
+        </p>
+        <p class="author">
+          <mat-icon>person</mat-icon>
+          <span>{{ getAuthorName(recipe) }}</span>
+        </p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <div class="action-left">
+          <app-like-button [recipe]="recipe" (liked)="handleLike(recipe)"></app-like-button>
+          <span class="comments-count">
+            <mat-icon>comment</mat-icon>
+            {{ recipe.comments.length || 0 }}
+          </span>
+        </div>
+        <div class="action-right">
+          <button mat-button color="primary" [routerLink]="['/recipes', recipe._id]">
+            <mat-icon>visibility</mat-icon>
+            View Details
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

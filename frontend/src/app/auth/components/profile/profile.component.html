@@ -1,0 +1,103 @@
+<div class="profile-container">
+  <div class="section-header">
+    <div class="header-left">
+      <h1>My Profile</h1>
+      <p class="header-subtitle">Manage your personal information</p>
+    </div>
+  </div>
+
+  <mat-card class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <div class="avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <h2>{{ user?.name }} {{ user?.surname }}</h2>
+        <p class="email">{{ user?.email }}</p>
+      </div>
+    </div>
+    
+    <mat-divider></mat-divider>
+    
+    <mat-card-content>
+      <div *ngIf="isLoading" class="loading-spinner">
+        <mat-spinner diameter="40" color="accent"></mat-spinner>
+      </div>
+      
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading" class="profile-form">
+        <h3 class="form-section-title">Personal Information</h3>
+        
+        <div class="name-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input 
+              matInput 
+              formControlName="name" 
+              placeholder="Enter your name"
+            >
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Surname</mat-label>
+            <input 
+              matInput 
+              formControlName="surname" 
+              placeholder="Enter your surname"
+            >
+          </mat-form-field>
+        </div>
+        
+        <h3 class="form-section-title">About You</h3>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Bio</mat-label>
+          <textarea 
+            matInput 
+            formControlName="bio" 
+            placeholder="Tell us about yourself and your cooking style"
+            rows="3"
+          ></textarea>
+          <mat-icon matPrefix>description</mat-icon>
+        </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Personality Traits</mat-label>
+          <textarea 
+            matInput 
+            formControlName="personality" 
+            placeholder="Describe your personality traits"
+            rows="3"
+          ></textarea>
+          <mat-icon matPrefix>psychology</mat-icon>
+        </mat-form-field>
+        
+        <div class="email-display">
+          <mat-icon>email</mat-icon>
+          <div class="email-info">
+            <span class="label">Email Address</span>
+            <span class="value">{{ user?.email }}</span>
+            <span class="note">Email cannot be changed</span>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button mat-button type="button" routerLink="/recipes">Cancel</button>
+          <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            [disabled]="profileForm.invalid || isSaving"
+            class="submit-button"
+          >
+            <mat-spinner diameter="20" *ngIf="isSaving"></mat-spinner>
+            <span *ngIf="!isSaving">Save Changes</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

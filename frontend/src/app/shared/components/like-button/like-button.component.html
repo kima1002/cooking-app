@@ -1,0 +1,11 @@
+<button
+  mat-icon-button
+  color="accent"
+    class="like-button"
+  (click)="toggleLike()"
+  [disabled]="!userId"
+  [matTooltip]="userId ? (isLiked ? 'Unlike' : 'Like') : 'Login to like recipes'"
+>
+  <mat-icon>{{ isLiked ? 'favorite' : 'favorite_border' }}</mat-icon>
+  <span class="like-count">{{ recipe.likesCount }}</span>
+</button>

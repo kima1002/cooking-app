@@ -1,0 +1,333 @@
+.recipe-list-container {
+  padding: 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .header-left {
+    h1 {
+      margin: 0 0 8px 0;
+      color: var(--primary-dark);
+      font-size: 28px;
+    }
+
+    .header-subtitle {
+      margin: 0;
+      color: var(--text-light);
+      font-size: 16px;
+    }
+  }
+
+  .add-recipe-btn {
+    padding: 0 16px;
+    border-radius: 24px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.no-recipes {
+  text-align: center;
+  margin: 60px auto;
+  max-width: 400px;
+  padding: 30px;
+  border-radius: 8px;
+  background-color: var(--background-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  .empty-icon {
+    font-size: 64px;
+    height: 64px;
+    width: 64px;
+    color: var(--primary-light);
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    color: var(--primary-dark);
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: var(--text-light);
+    margin-bottom: 24px;
+  }
+
+  button {
+    border-radius: 24px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.recipe-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: visible;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .recipe-badges {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    z-index: 5;
+  }
+
+  .recipe-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+
+    mat-icon {
+      font-size: 14px;
+      height: 14px;
+      width: 14px;
+      margin-right: 4px;
+    }
+
+    &.owner-badge {
+      background-color: var(--primary-dark);
+    }
+
+    &.public-badge {
+      background-color: var(--accent-color);
+    }
+
+    &.private-badge {
+      background-color: var(--text-light);
+    }
+  }
+
+  mat-card-image, .placeholder-image {
+    border-radius: 8px 8px 0 0;
+    height: 180px;
+    object-fit: cover;
+  }
+
+  .placeholder-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background-light);
+    position: relative;
+
+    mat-icon {
+      font-size: 64px;
+      height: 64px;
+      width: 64px;
+      color: var(--primary-light);
+      z-index: 1;
+    }
+
+    .fallback-icon {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      opacity: 0;
+      z-index: 0;
+    }
+
+    // When Material icon fails, show fallback
+    mat-icon:empty + .fallback-icon {
+      opacity: 0.7;
+    }
+  }
+
+  mat-card-header {
+    padding: 16px 16px 0;
+
+    mat-card-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+      color: var(--primary-dark);
+      font-weight: 500;
+    }
+
+    mat-card-subtitle {
+      margin-bottom: 0;
+
+      .recipe-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .author, .ingredients {
+          display: flex;
+          align-items: center;
+          font-size: 13px;
+
+          mat-icon {
+            font-size: 14px;
+            height: 14px;
+            width: 14px;
+            margin-right: 4px;
+            color: var(--primary-color);
+          }
+        }
+      }
+    }
+  }
+
+  mat-card-content {
+    flex-grow: 1;
+    padding: 8px 16px 0;
+
+    .recipe-instructions {
+      color: var(--text-color);
+      font-size: 14px;
+      line-height: 1.5;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      margin: 0;
+    }
+  }
+
+  mat-card-actions {
+    display: flex;
+    padding: 8px 8px 0;
+    justify-content: flex-start;
+
+    .action-button {
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+
+      mat-icon {
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+        margin-right: 4px;
+      }
+
+      &.view-button:hover {
+        background-color: rgba(76, 175, 80, 0.1);
+      }
+
+      &.edit-button:hover {
+        background-color: rgba(139, 195, 74, 0.1);
+      }
+
+      &.delete-button:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+    }
+  }
+
+  mat-card-footer {
+    padding: 8px 16px;
+    margin-top: 8px;
+
+    .recipe-stats {
+      display: flex;
+      justify-content: flex-start;
+      gap: 16px;
+
+      .likes, .comments {
+        display: flex;
+        align-items: center;
+        width: 65px;
+
+        mat-icon {
+          font-size: 16px;
+          height: 16px;
+          width: 16px;
+          margin-right: 4px;
+        }
+
+        span {
+          font-size: 14px;
+          color: var(--text-light);
+        }
+      }
+
+      .likes mat-icon {
+        color: var(--error-color);
+      }
+
+      .comments mat-icon {
+        color: var(--primary-color);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 16px;
+
+    .header-left {
+      margin-bottom: 16px;
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .header-subtitle {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .recipe-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .recipe-card {
+    mat-card-header {
+      padding: 12px 12px 0;
+
+      mat-card-title {
+        font-size: 16px;
+      }
+    }
+
+    mat-card-content {
+      padding: 8px 12px 0;
+    }
+
+    mat-card-actions, mat-card-footer {
+      padding: 8px 12px;
+    }
+  }
+}
